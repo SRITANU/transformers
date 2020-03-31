@@ -21,10 +21,12 @@ from collections import OrderedDict
 from .configuration_auto import (
     AlbertConfig,
     AutoConfig,
+    BartConfig,
     BertConfig,
     CamembertConfig,
     CTRLConfig,
     DistilBertConfig,
+    FlaubertConfig,
     GPT2Config,
     OpenAIGPTConfig,
     RobertaConfig,
@@ -40,7 +42,14 @@ from .modeling_albert import (
     AlbertForMaskedLM,
     AlbertForQuestionAnswering,
     AlbertForSequenceClassification,
+    AlbertForTokenClassification,
     AlbertModel,
+)
+from .modeling_bart import (
+    BART_PRETRAINED_MODEL_ARCHIVE_MAP,
+    BartForConditionalGeneration,
+    BartForSequenceClassification,
+    BartModel,
 )
 from .modeling_bert import (
     BERT_PRETRAINED_MODEL_ARCHIVE_MAP,
@@ -67,6 +76,13 @@ from .modeling_distilbert import (
     DistilBertForTokenClassification,
     DistilBertModel,
 )
+from .modeling_flaubert import (
+    FLAUBERT_PRETRAINED_MODEL_ARCHIVE_MAP,
+    FlaubertForQuestionAnsweringSimple,
+    FlaubertForSequenceClassification,
+    FlaubertModel,
+    FlaubertWithLMHeadModel,
+)
 from .modeling_gpt2 import GPT2_PRETRAINED_MODEL_ARCHIVE_MAP, GPT2LMHeadModel, GPT2Model
 from .modeling_openai import OPENAI_GPT_PRETRAINED_MODEL_ARCHIVE_MAP, OpenAIGPTLMHeadModel, OpenAIGPTModel
 from .modeling_roberta import (
@@ -77,12 +93,13 @@ from .modeling_roberta import (
     RobertaForTokenClassification,
     RobertaModel,
 )
-from .modeling_t5 import T5_PRETRAINED_MODEL_ARCHIVE_MAP, T5Model, T5WithLMHeadModel
+from .modeling_t5 import T5_PRETRAINED_MODEL_ARCHIVE_MAP, T5ForConditionalGeneration, T5Model
 from .modeling_transfo_xl import TRANSFO_XL_PRETRAINED_MODEL_ARCHIVE_MAP, TransfoXLLMHeadModel, TransfoXLModel
 from .modeling_xlm import (
     XLM_PRETRAINED_MODEL_ARCHIVE_MAP,
-    XLMForQuestionAnswering,
+    XLMForQuestionAnsweringSimple,
     XLMForSequenceClassification,
+    XLMForTokenClassification,
     XLMModel,
     XLMWithLMHeadModel,
 )
@@ -95,7 +112,7 @@ from .modeling_xlm_roberta import (
 )
 from .modeling_xlnet import (
     XLNET_PRETRAINED_MODEL_ARCHIVE_MAP,
-    XLNetForQuestionAnswering,
+    XLNetForQuestionAnsweringSimple,
     XLNetForSequenceClassification,
     XLNetForTokenClassification,
     XLNetLMHeadModel,
@@ -110,6 +127,7 @@ ALL_PRETRAINED_MODEL_ARCHIVE_MAP = dict(
     (key, value)
     for pretrained_map in [
         BERT_PRETRAINED_MODEL_ARCHIVE_MAP,
+        BART_PRETRAINED_MODEL_ARCHIVE_MAP,
         OPENAI_GPT_PRETRAINED_MODEL_ARCHIVE_MAP,
         TRANSFO_XL_PRETRAINED_MODEL_ARCHIVE_MAP,
         GPT2_PRETRAINED_MODEL_ARCHIVE_MAP,
@@ -121,6 +139,7 @@ ALL_PRETRAINED_MODEL_ARCHIVE_MAP = dict(
         ALBERT_PRETRAINED_MODEL_ARCHIVE_MAP,
         CAMEMBERT_PRETRAINED_MODEL_ARCHIVE_MAP,
         T5_PRETRAINED_MODEL_ARCHIVE_MAP,
+        FLAUBERT_PRETRAINED_MODEL_ARCHIVE_MAP,
         XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP,
     ]
     for key, value, in pretrained_map.items()
@@ -133,12 +152,14 @@ MODEL_MAPPING = OrderedDict(
         (AlbertConfig, AlbertModel),
         (CamembertConfig, CamembertModel),
         (XLMRobertaConfig, XLMRobertaModel),
+        (BartConfig, BartModel),
         (RobertaConfig, RobertaModel),
         (BertConfig, BertModel),
         (OpenAIGPTConfig, OpenAIGPTModel),
         (GPT2Config, GPT2Model),
         (TransfoXLConfig, TransfoXLModel),
         (XLNetConfig, XLNetModel),
+        (FlaubertConfig, FlaubertModel),
         (XLMConfig, XLMModel),
         (CTRLConfig, CTRLModel),
     ]
@@ -146,17 +167,19 @@ MODEL_MAPPING = OrderedDict(
 
 MODEL_FOR_PRETRAINING_MAPPING = OrderedDict(
     [
-        (T5Config, T5WithLMHeadModel),
+        (T5Config, T5ForConditionalGeneration),
         (DistilBertConfig, DistilBertForMaskedLM),
         (AlbertConfig, AlbertForMaskedLM),
         (CamembertConfig, CamembertForMaskedLM),
         (XLMRobertaConfig, XLMRobertaForMaskedLM),
+        (BartConfig, BartForConditionalGeneration),
         (RobertaConfig, RobertaForMaskedLM),
         (BertConfig, BertForPreTraining),
         (OpenAIGPTConfig, OpenAIGPTLMHeadModel),
         (GPT2Config, GPT2LMHeadModel),
         (TransfoXLConfig, TransfoXLLMHeadModel),
         (XLNetConfig, XLNetLMHeadModel),
+        (FlaubertConfig, FlaubertWithLMHeadModel),
         (XLMConfig, XLMWithLMHeadModel),
         (CTRLConfig, CTRLLMHeadModel),
     ]
@@ -164,17 +187,19 @@ MODEL_FOR_PRETRAINING_MAPPING = OrderedDict(
 
 MODEL_WITH_LM_HEAD_MAPPING = OrderedDict(
     [
-        (T5Config, T5WithLMHeadModel),
+        (T5Config, T5ForConditionalGeneration),
         (DistilBertConfig, DistilBertForMaskedLM),
         (AlbertConfig, AlbertForMaskedLM),
         (CamembertConfig, CamembertForMaskedLM),
         (XLMRobertaConfig, XLMRobertaForMaskedLM),
+        (BartConfig, BartForConditionalGeneration),
         (RobertaConfig, RobertaForMaskedLM),
         (BertConfig, BertForMaskedLM),
         (OpenAIGPTConfig, OpenAIGPTLMHeadModel),
         (GPT2Config, GPT2LMHeadModel),
         (TransfoXLConfig, TransfoXLLMHeadModel),
         (XLNetConfig, XLNetLMHeadModel),
+        (FlaubertConfig, FlaubertWithLMHeadModel),
         (XLMConfig, XLMWithLMHeadModel),
         (CTRLConfig, CTRLLMHeadModel),
     ]
@@ -186,9 +211,11 @@ MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING = OrderedDict(
         (AlbertConfig, AlbertForSequenceClassification),
         (CamembertConfig, CamembertForSequenceClassification),
         (XLMRobertaConfig, XLMRobertaForSequenceClassification),
+        (BartConfig, BartForSequenceClassification),
         (RobertaConfig, RobertaForSequenceClassification),
         (BertConfig, BertForSequenceClassification),
         (XLNetConfig, XLNetForSequenceClassification),
+        (FlaubertConfig, FlaubertForSequenceClassification),
         (XLMConfig, XLMForSequenceClassification),
     ]
 )
@@ -199,8 +226,9 @@ MODEL_FOR_QUESTION_ANSWERING_MAPPING = OrderedDict(
         (AlbertConfig, AlbertForQuestionAnswering),
         (RobertaConfig, RobertaForQuestionAnswering),
         (BertConfig, BertForQuestionAnswering),
-        (XLNetConfig, XLNetForQuestionAnswering),
-        (XLMConfig, XLMForQuestionAnswering),
+        (XLNetConfig, XLNetForQuestionAnsweringSimple),
+        (FlaubertConfig, FlaubertForQuestionAnsweringSimple),
+        (XLMConfig, XLMForQuestionAnsweringSimple),
     ]
 )
 
@@ -208,10 +236,12 @@ MODEL_FOR_TOKEN_CLASSIFICATION_MAPPING = OrderedDict(
     [
         (DistilBertConfig, DistilBertForTokenClassification),
         (CamembertConfig, CamembertForTokenClassification),
+        (XLMConfig, XLMForTokenClassification),
         (XLMRobertaConfig, XLMRobertaForTokenClassification),
         (RobertaConfig, RobertaForTokenClassification),
         (BertConfig, BertForTokenClassification),
         (XLNetConfig, XLNetForTokenClassification),
+        (AlbertConfig, AlbertForTokenClassification),
     ]
 )
 
@@ -251,6 +281,7 @@ class AutoModel(object):
                 - isInstance of `transfo-xl` configuration class: :class:`~transformers.TransfoXLModel` (Transformer-XL model)
                 - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetModel` (XLNet model)
                 - isInstance of `xlm` configuration class: :class:`~transformers.XLMModel` (XLM model)
+                - isInstance of `flaubert` configuration class: :class:`~transformers.FlaubertModel` (XLM model)
 
         Examples::
 
@@ -291,6 +322,7 @@ class AutoModel(object):
             - contains `xlnet`: :class:`~transformers.XLNetModel` (XLNet model)
             - contains `xlm`: :class:`~transformers.XLMModel` (XLM model)
             - contains `ctrl`: :class:`~transformers.CTRLModel` (Salesforce CTRL  model)
+            - contains `flaubert`: :class:`~transformers.Flaubert` (Flaubert  model)
 
             The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated)
             To train the model, you should first set it back in training mode with `model.train()`
@@ -336,16 +368,12 @@ class AutoModel(object):
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
 
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model. (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the underlying model's ``__init__`` method (we assume all relevant updates to the configuration have already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModel.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModel.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModel.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
@@ -392,15 +420,16 @@ class AutoModelForPreTraining(object):
             config (:class:`~transformers.PretrainedConfig`):
                 The model class to instantiate is selected based on the configuration class:
 
-                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertModelForMaskedLM` (DistilBERT model)
-                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaModelForMaskedLM` (RoBERTa model)
+                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertForMaskedLM` (DistilBERT model)
+                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaForMaskedLM` (RoBERTa model)
                 - isInstance of `bert` configuration class: :class:`~transformers.BertForPreTraining` (Bert model)
                 - isInstance of `openai-gpt` configuration class: :class:`~transformers.OpenAIGPTLMHeadModel` (OpenAI GPT model)
-                - isInstance of `gpt2` configuration class: :class:`~transformers.GPT2ModelLMHeadModel` (OpenAI GPT-2 model)
-                - isInstance of `ctrl` configuration class: :class:`~transformers.CTRLModelLMHeadModel` (Salesforce CTRL  model)
+                - isInstance of `gpt2` configuration class: :class:`~transformers.GPT2LMHeadModel` (OpenAI GPT-2 model)
+                - isInstance of `ctrl` configuration class: :class:`~transformers.CTRLLMHeadModel` (Salesforce CTRL  model)
                 - isInstance of `transfo-xl` configuration class: :class:`~transformers.TransfoXLLMHeadModel` (Transformer-XL model)
                 - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetLMHeadModel` (XLNet model)
                 - isInstance of `xlm` configuration class: :class:`~transformers.XLMWithLMHeadModel` (XLM model)
+                - isInstance of `flaubert` configuration class: :class:`~transformers.FlaubertWithLMHeadModel` (Flaubert model)
 
         Examples::
 
@@ -440,6 +469,7 @@ class AutoModelForPreTraining(object):
             - contains `xlnet`: :class:`~transformers.XLNetLMHeadModel` (XLNet model)
             - contains `xlm`: :class:`~transformers.XLMWithLMHeadModel` (XLM model)
             - contains `ctrl`: :class:`~transformers.CTRLLMHeadModel` (Salesforce CTRL model)
+            - contains `flaubert`: :class:`~transformers.FlaubertWithLMHeadModel` (Flaubert model)
 
         The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated)
         To train the model, you should first set it back in training mode with `model.train()`
@@ -478,24 +508,12 @@ class AutoModelForPreTraining(object):
             output_loading_info: (`optional`) boolean:
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model.
-                (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or
-                automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the
-                  underlying model's ``__init__`` method (we assume all relevant updates to the configuration have
-                  already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class
-                  initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of
-                  ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute
-                  with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration
-                  attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModelForPreTraining.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModelForPreTraining.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModelForPreTraining.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
@@ -543,15 +561,16 @@ class AutoModelWithLMHead(object):
             config (:class:`~transformers.PretrainedConfig`):
                 The model class to instantiate is selected based on the configuration class:
 
-                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertModelForMaskedLM` (DistilBERT model)
-                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaModelForMaskedLM` (RoBERTa model)
-                - isInstance of `bert` configuration class: :class:`~transformers.BertModelForMaskedLM` (Bert model)
+                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertForMaskedLM` (DistilBERT model)
+                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaForMaskedLM` (RoBERTa model)
+                - isInstance of `bert` configuration class: :class:`~transformers.BertForMaskedLM` (Bert model)
                 - isInstance of `openai-gpt` configuration class: :class:`~transformers.OpenAIGPTLMHeadModel` (OpenAI GPT model)
-                - isInstance of `gpt2` configuration class: :class:`~transformers.GPT2ModelLMHeadModel` (OpenAI GPT-2 model)
-                - isInstance of `ctrl` configuration class: :class:`~transformers.CTRLModelLMHeadModel` (Salesforce CTRL  model)
+                - isInstance of `gpt2` configuration class: :class:`~transformers.GPT2LMHeadModel` (OpenAI GPT-2 model)
+                - isInstance of `ctrl` configuration class: :class:`~transformers.CTRLLMHeadModel` (Salesforce CTRL  model)
                 - isInstance of `transfo-xl` configuration class: :class:`~transformers.TransfoXLLMHeadModel` (Transformer-XL model)
                 - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetLMHeadModel` (XLNet model)
                 - isInstance of `xlm` configuration class: :class:`~transformers.XLMWithLMHeadModel` (XLM model)
+                - isInstance of `flaubert` configuration class: :class:`~transformers.FlaubertWithLMHeadModel` (Flaubert model)
 
         Examples::
 
@@ -592,6 +611,7 @@ class AutoModelWithLMHead(object):
             - contains `xlnet`: :class:`~transformers.XLNetLMHeadModel` (XLNet model)
             - contains `xlm`: :class:`~transformers.XLMWithLMHeadModel` (XLM model)
             - contains `ctrl`: :class:`~transformers.CTRLLMHeadModel` (Salesforce CTRL model)
+            - contains `flaubert`: :class:`~transformers.FlaubertWithLMHeadModel` (Flaubert model)
 
         The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated)
         To train the model, you should first set it back in training mode with `model.train()`
@@ -630,24 +650,12 @@ class AutoModelWithLMHead(object):
             output_loading_info: (`optional`) boolean:
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model.
-                (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or
-                automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the
-                  underlying model's ``__init__`` method (we assume all relevant updates to the configuration have
-                  already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class
-                  initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of
-                  ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute
-                  with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration
-                  attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModelWithLMHead.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModelWithLMHead.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModelWithLMHead.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
@@ -695,14 +703,15 @@ class AutoModelForSequenceClassification(object):
             config (:class:`~transformers.PretrainedConfig`):
                 The model class to instantiate is selected based on the configuration class:
 
-                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertModelForSequenceClassification` (DistilBERT model)
-                - isInstance of `albert` configuration class: :class:`~transformers.AlbertModelForSequenceClassification` (ALBERT model)
-                - isInstance of `camembert` configuration class: :class:`~transformers.CamembertModelForSequenceClassification` (CamemBERT model)
-                - isInstance of `xlm roberta` configuration class: :class:`~transformers.XLMRobertaModelForSequenceClassification` (XLM-RoBERTa model)
-                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaModelForSequenceClassification` (RoBERTa model)
-                - isInstance of `bert` configuration class: :class:`~transformers.BertModelForSequenceClassification` (Bert model)
-                - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetModelForSequenceClassification` (XLNet model)
-                - isInstance of `xlm` configuration class: :class:`~transformers.XLMModelForSequenceClassification` (XLM model)
+                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertForSequenceClassification` (DistilBERT model)
+                - isInstance of `albert` configuration class: :class:`~transformers.AlbertForSequenceClassification` (ALBERT model)
+                - isInstance of `camembert` configuration class: :class:`~transformers.CamembertForSequenceClassification` (CamemBERT model)
+                - isInstance of `xlm roberta` configuration class: :class:`~transformers.XLMRobertaForSequenceClassification` (XLM-RoBERTa model)
+                - isInstance of `roberta` configuration class: :class:`~transformers.RobertaForSequenceClassification` (RoBERTa model)
+                - isInstance of `bert` configuration class: :class:`~transformers.BertForSequenceClassification` (Bert model)
+                - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetForSequenceClassification` (XLNet model)
+                - isInstance of `xlm` configuration class: :class:`~transformers.XLMForSequenceClassification` (XLM model)
+                - isInstance of `flaubert` configuration class: :class:`~transformers.FlaubertForSequenceClassification` (Flaubert model)
 
 
         Examples::
@@ -740,7 +749,7 @@ class AutoModelForSequenceClassification(object):
             - contains `roberta`: :class:`~transformers.RobertaForSequenceClassification` (RoBERTa model)
             - contains `bert`: :class:`~transformers.BertForSequenceClassification` (Bert model)
             - contains `xlnet`: :class:`~transformers.XLNetForSequenceClassification` (XLNet model)
-            - contains `xlm`: :class:`~transformers.XLMForSequenceClassification` (XLM model)
+            - contains `flaubert`: :class:`~transformers.FlaubertForSequenceClassification` (Flaubert model)
 
         The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated)
         To train the model, you should first set it back in training mode with `model.train()`
@@ -786,16 +795,12 @@ class AutoModelForSequenceClassification(object):
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
 
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model. (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the underlying model's ``__init__`` method (we assume all relevant updates to the configuration have already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModelForSequenceClassification.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModelForSequenceClassification.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
@@ -845,11 +850,12 @@ class AutoModelForQuestionAnswering(object):
             config (:class:`~transformers.PretrainedConfig`):
                 The model class to instantiate is selected based on the configuration class:
 
-                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertModelForQuestionAnswering` (DistilBERT model)
-                - isInstance of `albert` configuration class: :class:`~transformers.AlbertModelForQuestionAnswering` (ALBERT model)
+                - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertForQuestionAnswering` (DistilBERT model)
+                - isInstance of `albert` configuration class: :class:`~transformers.AlbertForQuestionAnswering` (ALBERT model)
                 - isInstance of `bert` configuration class: :class:`~transformers.BertModelForQuestionAnswering` (Bert model)
-                - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetModelForQuestionAnswering` (XLNet model)
-                - isInstance of `xlm` configuration class: :class:`~transformers.XLMModelForQuestionAnswering` (XLM model)
+                - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetForQuestionAnswering` (XLNet model)
+                - isInstance of `xlm` configuration class: :class:`~transformers.XLMForQuestionAnswering` (XLM model)
+                - isInstance of `flaubert` configuration class: :class:`~transformers.FlaubertForQuestionAnswering` (XLM model)
 
         Examples::
 
@@ -885,6 +891,7 @@ class AutoModelForQuestionAnswering(object):
             - contains `bert`: :class:`~transformers.BertForQuestionAnswering` (Bert model)
             - contains `xlnet`: :class:`~transformers.XLNetForQuestionAnswering` (XLNet model)
             - contains `xlm`: :class:`~transformers.XLMForQuestionAnswering` (XLM model)
+            - contains `flaubert`: :class:`~transformers.FlaubertForQuestionAnswering` (XLM model)
 
         The model is set in evaluation mode by default using `model.eval()` (Dropout modules are deactivated)
         To train the model, you should first set it back in training mode with `model.train()`
@@ -927,16 +934,12 @@ class AutoModelForQuestionAnswering(object):
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
 
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model. (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the underlying model's ``__init__`` method (we assume all relevant updates to the configuration have already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModelForQuestionAnswering.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModelForQuestionAnswering.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModelForQuestionAnswering.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
@@ -988,8 +991,10 @@ class AutoModelForTokenClassification:
                 The model class to instantiate is selected based on the configuration class:
 
                 - isInstance of `distilbert` configuration class: :class:`~transformers.DistilBertModelForTokenClassification` (DistilBERT model)
+                - isInstance of `xlm` configuration class: :class:`~transformers.XLMForTokenClassification` (XLM model)
                 - isInstance of `xlm roberta` configuration class: :class:`~transformers.XLMRobertaModelForTokenClassification` (XLMRoberta model)
                 - isInstance of `bert` configuration class: :class:`~transformers.BertModelForTokenClassification` (Bert model)
+                - isInstance of `albert` configuration class: :class:`~transformers.AlbertForTokenClassification` (AlBert model)
                 - isInstance of `xlnet` configuration class: :class:`~transformers.XLNetModelForTokenClassification` (XLNet model)
                 - isInstance of `camembert` configuration class: :class:`~transformers.CamembertModelForTokenClassification` (Camembert model)
                 - isInstance of `roberta` configuration class: :class:`~transformers.RobertaModelForTokenClassification` (Roberta model)
@@ -1024,6 +1029,7 @@ class AutoModelForTokenClassification:
         The model class to instantiate is selected as the first pattern matching
         in the `pretrained_model_name_or_path` string (in the following order):
             - contains `distilbert`: :class:`~transformers.DistilBertForTokenClassification` (DistilBERT model)
+            - contains `xlm`: :class:`~transformers.XLMForTokenClassification` (XLM model)
             - contains `xlm-roberta`: :class:`~transformers.XLMRobertaForTokenClassification` (XLM-RoBERTa?Para model)
             - contains `camembert`: :class:`~transformers.CamembertForTokenClassification` (Camembert model)
             - contains `bert`: :class:`~transformers.BertForTokenClassification` (Bert model)
@@ -1071,16 +1077,12 @@ class AutoModelForTokenClassification:
                 Set to ``True`` to also return a dictionnary containing missing keys, unexpected keys and error messages.
 
             kwargs: (`optional`) Remaining dictionary of keyword arguments:
-                Can be used to update the configuration object (after it being loaded) and initiate the model. (e.g. ``output_attention=True``). Behave differently depending on whether a `config` is provided or automatically loaded:
-
-                - If a configuration is provided with ``config``, ``**kwargs`` will be directly passed to the underlying model's ``__init__`` method (we assume all relevant updates to the configuration have already been done)
-                - If a configuration is not provided, ``kwargs`` will be first passed to the configuration class initialization function (:func:`~transformers.PretrainedConfig.from_pretrained`). Each key of ``kwargs`` that corresponds to a configuration attribute will be used to override said attribute with the supplied ``kwargs`` value. Remaining keys that do not correspond to any configuration attribute will be passed to the underlying model's ``__init__`` function.
+                These arguments will be passed to the configuration and the model.
 
         Examples::
 
             model = AutoModelForTokenClassification.from_pretrained('bert-base-uncased')    # Download model and configuration from S3 and cache.
             model = AutoModelForTokenClassification.from_pretrained('./test/bert_model/')  # E.g. model was saved using `save_pretrained('./test/saved_model/')`
-            model = AutoModelForTokenClassification.from_pretrained('bert-base-uncased', output_attention=True)  # Update configuration during loading
             assert model.config.output_attention == True
             # Loading from a TF checkpoint file instead of a PyTorch model (slower)
             config = AutoConfig.from_json_file('./tf_model/bert_tf_model_config.json')
